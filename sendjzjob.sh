@@ -28,7 +28,8 @@ START=$2
 STOP=$3
 
 # Set input ze4v file:
-ZE4V=${BNAME}
+# ZE4V=${BNAME}
+ZE4V=ze_${BNAME}
 
 # Set the name of the ouput files for this run
 NAME=jz_${BNAME}.${START}-${STOP}
@@ -53,6 +54,7 @@ done
 # Other cards:
 cat >> ${NAME}.ffr << EOF
 JTUPLE 1=44 3='${NAME}.hbook'
+ZE4VFORM 1
 STOP
 EOF
 

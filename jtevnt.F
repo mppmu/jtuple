@@ -30,7 +30,8 @@ C     Local declarations:
       real r(3), rdoca(3), pmom(3), charge, cap, rmin, phim, sig, ptot
      &     , eclus, ecorr, dzds, pxy, eee1, eee2, eeb
      &     , rdot, psum(4), pmiss, thrval(3), thrvec(3,3), costt, minv
-     &     , minvh, etot, geclus, pzbal, evis, zvtrk, etest
+     &     , minvh, etotlg, geclus, pzbal, evis, zvtrk, etest, etot
+     &     , etotmt
 
       data icall / 0 /
 
@@ -183,7 +184,9 @@ C     Get LGCL bank and select clusters:
       eee1= 0.0
       eee2= 0.0
       eeb= 0.0
+      etotlg= 0.0
       etot= 0.0
+      etotmt= 0.0
       nlgcl= 0
       nclus= 0
       nmtcls= 0
@@ -212,23 +215,25 @@ C     Loop over clusters (watch japanese pointer handling JCN 14D):
 C     Energy and track connection info:
             ntotcl= ntotcl + 1
             eclus= rw(i+2)
-            etot= etot+eclus
+            etotlg= etotlg + eclus
             iconn= iw(i+8)
-            call hfill( 130, eclus, 0.0, 1.0 )
+            call hfill( 132, eclus, 0.0, 1.0 )
 C     Cluster energy correction a la ze4vpk for connected tracks incl.
 C     path length dependence for barrel clusters (JADE cluster matching):
             dzds= 1.0
             if( iw(j+1).eq.0 ) dzds= 1.0/sqrt(1.0-rw(j+11)**2)
             ecorr= eclus - elgmin*(iconn/100)*dzds
-            if( ecorr.gt.0.0 ) call hfill( 131, ecorr, 0.0, 1.0 )
+            if( ecorr.gt.0.0 ) call hfill( 133, ecorr, 0.0, 1.0 )
 C     Select clusters before matching (eclus).  However, remove clusters
 C     with ecorr < elgct (matched clusters) from cluster array for
 C     compatibility with ze4v-based data analysis if demanded:
             etest= eclus
             if( lze4v ) etest= ecorr
-            if( etest.ge.elgct ) then
+            if( etest.gt.elgct ) then
                nlgcl= nlgcl + 1
                nclus= nclus + 1
+               etot= etot + eclus
+               if( ecorr.gt.elgct ) etotmt= etotmt + ecorr
                do j= 1, 3
                   plgcl(j,nlgcl)= rw(i+8+j)*eclus
                   pclus(j,nlgcl)= plgcl(j,nlgcl)
@@ -271,7 +276,7 @@ C     (akward, but corresponds to JADE ze4v based event selection):
             endif
          enddo
          if( icall.le.nwvect )
-     &        print *, 'JTEVT: LGCL Etot: ', geclus, etot
+     &        print *, 'JTEVT: LGCL Etot: ', geclus, etotlg
          call hfill( 103, float(nlgcl), 0.0, 1.0 )
          call hfill( 104, float(nmtcls), 0.0, 1.0 )
       else
@@ -286,6 +291,8 @@ C     Fill ntuple with cluster based event selection variables:
       call hfill( 105, eee1, 0.0, 1.0 )
       call hfill( 106, eee2, 0.0, 1.0 )
       call hfill( 107, eeb, 0.0, 1.0 )
+      call hfill( 130, etot, 0.0, 1.0 )
+      call hfill( 131, etotmt, 0.0, 1.0 )
 
 C     Fill arrays with all selected particles before and after JADE 
 C     cluster matching and calculate 4-momentum sum from MT list:
