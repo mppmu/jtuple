@@ -5,6 +5,9 @@
 #
 ##########################################
 
+# Time stamp:
+echo job starts at `date`
+
 # Check current platform
 if [ `uname` != 'Linux' ] ; then
    echo Current platform is not supported.
@@ -55,6 +58,9 @@ EOF
 
 # Execute:
 time ${JTPATH}/jzread < ${NAME}.ffr
+
+# Time stamp:
+echo job ends at `date`
 
 # The End
 exit

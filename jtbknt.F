@@ -4,10 +4,9 @@
 #include "jtjtpl.inc"
 
 C     Ntuple:
-c      CALL HCDIR( 'JTUPLE', ' ' )
       CALL HBNT( 10, 'QQJT200', 'D' )
       CHDAGN(:)= ' '
-      CALL QQFORM( CHDAGN, 'IRUN', 0, ' ', 0.0, 20000.0 )
+      CALL QQFORM( CHDAGN, 'IRUN', 0, ' ', 0.0, 50000.0 )
       CALL QQFORM( CHDAGN, 'IEVNT', 0, ' ', 0.0, 0.0 )
       CALL QQFORM( CHDAGN, 'ITKMH', 0, ' ', 0.0, 1.0 )
       CALL QQFORM( CHDAGN, 'IGPMH', 0, ' ', 0.0, 1.0 )

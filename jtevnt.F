@@ -139,7 +139,7 @@ C     Reject tracks with ptot>4/3ebeam in addition
      &                 ' selected tracks in event ', irun, ievnt
                endif
 C     Count "vertex" and "good" tracks for event selection:
-               if( rmin.lt.30.0 ) then
+               if( abs(rmin).lt.30.0 ) then
                   ntrkvx= ntrkvx + 1
                   itrkvx(ntrkvx)= npatr
                endif
@@ -245,15 +245,17 @@ C     for rejected clusters store index:
                   endif
                endif
             endif
-C     Energy sums in barrel and endcaps for event selection:
+C     Energy sums in barrel and endcaps for event selection, sum 
+C     uncorrected cluster energies for clusters selected after matching
+C     (akward, but corresponds to JADE ze4v based event selection):
             if( ecorr.ge.elgct ) then
                iebee= iw(i+1)
                if( iebee.eq.-1 ) then
-                  eee1= eee1 + ecorr
+                  eee1= eee1 + eclus
                elseif( iebee.eq.0 ) then
-                  eeb= eeb + ecorr
+                  eeb= eeb + eclus
                elseif( iebee.eq.1 ) then
-                  eee2= eee2 + ecorr
+                  eee2= eee2 + eclus
                else
                   print *, 'JTEVNT: funny value of iebee= ', iebee,
      &                 ' in event ', irun, ievnt

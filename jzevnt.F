@@ -86,6 +86,7 @@ C     reject tracks with ptot > 4/3*ebeam in addition:
                lacc= .false.
                nrejrm= nrejrm + 1
             elseif( ptot.lt.pcut .or. ptot.gt.4.0/3.0*ebeam ) then
+C            elseif( ptot.lt.pcut ) then
                lacc= .false.
                nrejp= nrejp + 1
             endif
@@ -108,7 +109,7 @@ C     reject tracks with ptot > 4/3*ebeam in addition:
      &                 irun, ievnt, npatr, maxtrk
                endif
 C     Count "vertex" and "good" tracks for event selection:
-               if( rmin.lt.30.0 ) then
+               if( abs(rmin).lt.30.0 ) then
                   ntrkvx= ntrkvx + 1
                   itrkvx(ntrkvx)= npatr
                endif
@@ -143,16 +144,14 @@ C     Get JADE matching info:
                endif
                etot= etot + eclus
                etotmt= etotmt + ecorr
-            endif
 C     Energy sums in barrel and endcaps for event selection:
-            if( ecorr.ge.elgct ) then
                iebee= ixlgp(i)
                if( iebee.eq.-1 ) then
-                  eee1= eee1 + ecorr
+                  eee1= eee1 + eclus
                elseif( iebee.eq.0 .or. iebee.eq.100 ) then
-                  eeb= eeb + ecorr
+                  eeb= eeb + eclus
                elseif( iebee.eq.1 ) then
-                  eee2= eee2 + ecorr
+                  eee2= eee2 + eclus
                else
                   print *, 'JZEVNT: funny value of iebee= ', iebee,
      &                 ' in event ', irun, ievnt
