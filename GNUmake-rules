@@ -38,8 +38,12 @@ jtjob : jtjob.o libjtlib.a libntuple.a
 # Link ze4v -> ntuple:
 jzread : jzread.o libzread.a libntuple.a
 	$(LD) $(LDFLAGS) -o $@ $^ \
-	-L$(CERNLIB) $(patsubst %,-l%,$(CERNLIBS)) >> MAIN.map
+	-L$(CERNLIB) $(patsubst %,-l%,$(CERNLIBS))
 
+# Link lumi analysis program:
+taklumi : taklumi.o
+	$(LD) $(LDFLAGS) -o $@ $< \
+	-L$(CERNLIB) $(patsubst %,-l%,$(CERNLIBS))
 
 # Libraries depend on temporay .o files:
 libjtlib.a : libjtlib.a( $(LIBJADEOBJS) )
