@@ -11,16 +11,14 @@ C     after JADE cluster matching:
 C     LG-cluster energy sums in EE and EB calculated after
 C     JADE cluster matching and selection:
       if( ebeam.lt.8.0 ) then
-         if( ee(1).lt.0.2 .and. ee(2).lt.0.2 .and. eb.lt.1.2 )
+         if( ( ee(1).lt.0.2 .or. ee(2).lt.0.2 ) .and. eb.lt.1.2 )
      &        lacc= .false.
       elseif( ebeam.ge.8.0 .and. ebeam.lt.12.0 ) then
-         if( ee(1).lt.0.4 .and. ee(2).lt.0.4 .and. eb.lt.2.0 )
-     &        lacc= .false.
-      elseif( ebeam.ge.12.0 ) then
-         if( ee(1).lt.0.4 .and. ee(2).lt.0.4 .and. eb.lt.4.0 )
+         if( ( ee(1).lt.0.4 .or. ee(2).lt.0.4 ) .and. eb.lt.2.0 )
      &        lacc= .false.
       else
-         print *, 'JTEVNT: beam energy outside range: ', ebeam
+         if( ( ee(1).lt.0.4 .or. ee(2).lt.0.4 ) .and. eb.lt.3.0 )
+     &        lacc= .false.
       endif
 C     Number of good tracks, tracks from vertex region and
 C     3-1 prong configuration for ntrkvx=4:

@@ -5,6 +5,9 @@
 #
 ##########################################
 
+# Time stamp:
+echo job starts at `date`
+
 # Check current platform
 if [ `uname` != 'AIX' ] ; then
    echo Current platform is not supported.
@@ -69,6 +72,9 @@ EOF
 
 # Execute:
 time ${JTPATH}/jtjob < ${NAME}.ffr
+
+# Time stamp:
+echo job ends at `date`
 
 # The End
 exit
