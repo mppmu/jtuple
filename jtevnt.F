@@ -210,7 +210,7 @@ C     Loop over clusters (watch japanese pointer handling JCN 14D):
          ipend= ipstrt + (nclst-1)*nword
          do i= ipstrt, ipend, nword
 C     Energy and track connection info:
-            ntotlg= ntotlg + 1
+            ntotcl= ntotcl + 1
             eclus= rw(i+2)
             etot= etot+eclus
             iconn= iw(i+8)
