@@ -1,0 +1,109 @@
+macro splitntuples set=14
+
+| Get argument in batch mode:
+if batch.eq.1 then
+  read set
+endif
+
+| Get current dir:
+pwd= $shell('pwd')
+
+| Comis routine ntdup.f copies udsc and b flavoured events
+| in id1 to id2 and id3, needed by macro ntsplit.  Macro ntsplit
+| uses defaults id1=10, id2=11, id3=12
+application comis quit                                                       
+!file ntdup.f77
+quit
+
+| Better use local path:
+path= /mnt/scratch/skluth/jade/jobs/jtuple
+lcdir [path]
+
+| Process ntuples of each dataset:
+case [set] in
+
+  (14)
+  exec ntsplit py57_14.0_81-07-17/jt_py57_14.0_81-07-17.1-5.hbook _
+               py57_14.0_81-07-17/jt_py57_14.0_81-07-17.1-5.split.hbook
+  exec ntsplit py57_14.0_81-07-17/jt_py57_14.0_81-07-17.6-10.hbook _
+               py57_14.0_81-07-17/jt_py57_14.0_81-07-17.6-10.split.hbook
+  exec ntsplit hw59_14.0_81-07-17/jt_hw59_14.0_81-07-17.1-5.hbook _
+               hw59_14.0_81-07-17/jt_hw59_14.0_81-07-17.1-5.split.hbook
+  exec ntsplit hw59_14.0_81-07-17/jt_hw59_14.0_81-07-17.6-10.hbook _
+               hw59_14.0_81-07-17/jt_hw59_14.0_81-07-17.6-10.split.hbook
+
+  (22)
+  exec ntsplit py57_22.0_81-06-17/jt_py57_22.0_81-06-17.1-5.hbook _
+               py57_22.0_81-06-17/jt_py57_22.0_81-06-17.1-5.split.hbook
+  exec ntsplit py57_22.0_81-06-17/jt_py57_22.0_81-06-17.6-10.hbook _
+               py57_22.0_81-06-17/jt_py57_22.0_81-06-17.6-10.split.hbook
+  exec ntsplit hw59_22.0_81-06-17/jt_hw59_22.0_81-06-17.1-5.hbook _
+               hw59_22.0_81-06-17/jt_hw59_22.0_81-06-17.1-5.split.hbook
+  exec ntsplit hw59_22.0_81-06-17/jt_hw59_22.0_81-06-17.6-10.hbook _
+               hw59_22.0_81-06-17/jt_hw59_22.0_81-06-17.6-10.split.hbook
+
+  (35a)
+  exec ntsplit py57_34.6_82-05-17/jt_py57_34.6_82-05-17.1-5.hbook _
+               py57_34.6_82-05-17/jt_py57_34.6_82-05-17.1-5.split.hbook
+  exec ntsplit py57_34.6_82-05-17/jt_py57_34.6_82-05-17.6-10.hbook _
+               py57_34.6_82-05-17/jt_py57_34.6_82-05-17.6-10.split.hbook
+  exec ntsplit py57_34.6_82-05-17/jt_py57_34.6_82-05-17.11-15.hbook _
+               py57_34.6_82-05-17/jt_py57_34.6_82-05-17.11-15.split.hbook
+  exec ntsplit py57_34.6_82-05-17/jt_py57_34.6_82-05-17.16-20.hbook _
+               py57_34.6_82-05-17/jt_py57_34.6_82-05-17.16-20.split.hbook
+  exec ntsplit hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.1-5.hbook _
+               hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.1-5.split.hbook
+  exec ntsplit hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.6-10.hbook _
+               hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.6-10.split.hbook
+  exec ntsplit hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.11-15.hbook _
+               hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.11-15.split.hbook
+  exec ntsplit hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.16-20.hbook _
+               hw59_34.6_82-05-17/jt_hw59_34.6_82-05-17.16-20.split.hbook
+
+  (35b)
+  exec ntsplit py57_35.0_86-05-17/jt_py57_35.0_86-05-17.1-5.hbook _
+               py57_35.0_86-05-17/jt_py57_35.0_86-05-17.1-5.split.hbook
+  exec ntsplit py57_35.0_86-05-17/jt_py57_35.0_86-05-17.6-10.hbook _
+               py57_35.0_86-05-17/jt_py57_35.0_86-05-17.6-10.split.hbook
+  exec ntsplit py57_35.0_86-05-17/jt_py57_35.0_86-05-17.11-15.hbook _
+               py57_35.0_86-05-17/jt_py57_35.0_86-05-17.11-15.split.hbook
+  exec ntsplit py57_35.0_86-05-17/jt_py57_35.0_86-05-17.16-20.hbook _
+               py57_35.0_86-05-17/jt_py57_35.0_86-05-17.16-20.split.hbook
+  exec ntsplit hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.1-5.hbook _
+               hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.1-5.split.hbook
+  exec ntsplit hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.6-10.hbook _
+               hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.6-10.split.hbook
+  exec ntsplit hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.11-15.hbook _
+               hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.11-15.split.hbook
+  exec ntsplit hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.16-20.hbook _
+               hw59_35.0_86-05-17/jt_hw59_35.0_86-05-17.16-20.split.hbook
+
+  (38)
+  exec ntsplit py57_38.3_85-10-01/jt_py57_38.3_85-10-01.1-5.hbook _
+               py57_38.3_85-10-01/jt_py57_38.3_85-10-01.1-5.split.hbook
+  exec ntsplit py57_38.3_85-10-01/jt_py57_38.3_85-10-01.6-10.hbook _
+               py57_38.3_85-10-01/jt_py57_38.3_85-10-01.6-10.split.hbook
+  exec ntsplit hw59_38.3_85-10-01/jt_hw59_38.3_85-10-01.1-5.hbook _
+               hw59_38.3_85-10-01/jt_hw59_38.3_85-10-01.1-5.split.hbook
+  exec ntsplit hw59_38.3_85-10-01/jt_hw59_38.3_85-10-01.6-10.hbook _
+               hw59_38.3_85-10-01/jt_hw59_38.3_85-10-01.6-10.split.hbook
+
+  (44)
+  exec ntsplit py57_43.8_85-05-17/jt_py57_43.8_85-05-17.1-5.hbook _
+               py57_43.8_85-05-17/jt_py57_43.8_85-05-17.1-5.split.hbook
+  exec ntsplit py57_43.8_85-05-17/jt_py57_43.8_85-05-17.6-10.hbook _
+               py57_43.8_85-05-17/jt_py57_43.8_85-05-17.6-10.split.hbook
+
+  exec ntsplit hw59_43.8_85-05-17/jt_hw59_43.8_85-05-17.1-5.hbook _
+               hw59_43.8_85-05-17/jt_hw59_43.8_85-05-17.1-5.split.hbook
+  exec ntsplit hw59_43.8_85-05-17/jt_hw59_43.8_85-05-17.6-10.hbook _
+               hw59_43.8_85-05-17/jt_hw59_43.8_85-05-17.6-10.split.hbook
+
+endcase
+
+
+| Reset to pwd:
+lcdir [pwd]
+
+| The End:
+return
