@@ -56,6 +56,7 @@ C     Particle section:
          
 C     Tracks:
          if( ixptf(i).eq.1 ) then
+            ntottk= ntottk + 1
 C     Number of hits in r-phi and r-z according to ze4vpk packing:
             nhitrp= mod(ixhits(i),100)
             nhitrz= int(ixhits(i)/100)
@@ -85,8 +86,10 @@ C     reject tracks with ptot > 4/3*ebeam in addition:
             elseif( abs(rmin).gt.rminct ) then
                lacc= .false.
                nrejrm= nrejrm + 1
-            elseif( ptot.lt.pcut .or. ptot.gt.4.0/3.0*ebeam ) then
-C            elseif( ptot.lt.pcut ) then
+c            elseif( ptot.lt.pcut .or. ptot.gt.4.0/3.0*ebeam ) then
+C     Catch tracks set to p_tot= 0.5*ebeam by ze4vpk, they had p_tot>ebeam:
+            elseif( ptot.lt.pcut .or. 
+     &              abs(ptot-0.5*ebeam).lt.1.0e-5 ) then
                lacc= .false.
                nrejp= nrejp + 1
             endif
@@ -118,9 +121,10 @@ C     Count "vertex" and "good" tracks for event selection:
             
 C     Cluster:
          elseif( ixptf(i).eq.0 ) then
-C     Cluster energy before JADE matching:
+C     Cluster energies before and after JADE matching:
             eclus= xecl(i)
             ecorr= xp(i)
+            ntotcl= ntotcl + 1
             call hfill( 132, eclus, 0.0, 1.0 )
             call hfill( 133, ecorr, 0.0, 1.0 )
             if( eclus.gt.elgct ) then
@@ -156,6 +160,8 @@ C     Energy sums in barrel and endcaps for event selection:
                   print *, 'JZEVNT: funny value of iebee= ', iebee,
      &                 ' in event ', irun, ievnt
                endif
+            else
+               nrejlg= nrejlg + 1
             endif
  
          endif

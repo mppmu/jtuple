@@ -16,6 +16,9 @@ C     Initialise statistics counters:
       nevtot= 0
       nnonr= 0
       ndnonr= 0
+      nrejlg= 0
+      ntotcl= 0
+      ntottk= 0
 
 C     Book ntuple:
       call jtbknt( lmc, langl )

@@ -105,7 +105,6 @@ C     Calculate track cut variables:
             call hfill( 121, float(nhitrz), 0.0, 1.0 )
             call hfill( 122, zvtrk, 0.0, 1.0 )
             call hfill( 123, rmin, 0.0, 1.0 )
-            call hfill( 124, ptot, 0.0, 1.0 )
             call hfill( 125, pxy, 0.0, 1.0 )
 C     Select tracks and count rejected tracks in a strange way a la ze4vpk:
 C     Reject tracks with ptot>4/3ebeam in addition 
@@ -122,10 +121,19 @@ C     Reject tracks with ptot>4/3ebeam in addition
             elseif( abs(rmin).gt.rminct ) then
                lacc= .false.
                nrejrm= nrejrm + 1
-            elseif( ptot.lt.pcut .or. ptot.gt.4.0/3.0*ebeam ) then
+            elseif( ptot.lt.pcut ) then
                lacc= .false.
                nrejp= nrejp + 1
+            elseif( ptot.gt.ebeam ) then
+               if( lze4v ) then
+                  lacc= .false.
+                  nrejp= nrejp + 1
+               elseif( ptot.gt.4.0/3.0*ebeam ) then
+                  lacc= .false.
+                  nrejp= nrejp + 1
+               endif
             endif
+            call hfill( 124, ptot, 0.0, 1.0 )
             if( lacc ) then
                npatr= npatr + 1
                ntrk= ntrk + 1
