@@ -82,6 +82,8 @@ C     Check number of tracks in PATR bank:
      &           , irun, ievnt
             goto 100
          endif
+         if( icall.le.nwvect ) 
+     &        print *, 'JTEVNT: selected patr tracks:'
 C     Calculate event vertex:
          call ze4vvx( r, ntrvx )
          zvert= r(3)
@@ -136,6 +138,10 @@ C     Reject tracks with ptot>4/3ebeam in addition
                   z0(ntrk)= zvtrk
                   d0(ntrk)= rmin
                   id02(ntrk)= 1
+                  if( icall.le.nwvect ) then
+                     print *, (ppatr(j,npatr),j=1,4), nint(charge)
+     &                    , rmin
+                  endif
                else
                   print *, 'JTEVNT: more than ', maxtrk, 
      &                 ' selected tracks in event ', irun, ievnt
@@ -154,11 +160,14 @@ C     Count "vertex" and "good" tracks for event selection:
      &        , ievnt
       endif
  100  continue
+ 101  format( 4(1x,f6.3),1x,i2,1x,f6.3 )
+
 C     Fill ntuple variables for track based event selection variables:
       inttr= ntrkvx
       iltr= ntrkgd
       call hfill( 108, float(ntrkvx), 0.0, 1.0 )
       call hfill( 109, float(ntrkgd), 0.0, 1.0 )
+
 C     In case of 4 tracks check for 1- vs 3-prong configurations:
 C     npatr, ntrkvx or ntrkgd? Choose "vertex" tracks:
       itauct= 1
@@ -205,6 +214,8 @@ C     Check number of clusters in bank:
      &           , irun, ievnt
             goto 200
          endif
+         if( icall.le.nwvect )
+     &        print *, 'JTEVNT: selected lgcl clusters:'
 C     Get "general information" for cross checks:
          geclus= rw(nplgcl+ip1+6)
 C     Loop over clusters (watch japanese pointer handling JCN 14D):
@@ -221,7 +232,7 @@ C     Energy and track connection info:
 C     Cluster energy correction a la ze4vpk for connected tracks incl.
 C     path length dependence for barrel clusters (JADE cluster matching):
             dzds= 1.0
-            if( iw(j+1).eq.0 ) dzds= 1.0/sqrt(1.0-rw(j+11)**2)
+            if( iw(i+1).eq.0 ) dzds= 1.0/sqrt(1.0-rw(i+11)**2)
             ecorr= eclus - elgmin*(iconn/100)*dzds
             if( ecorr.gt.0.0 ) call hfill( 133, ecorr, 0.0, 1.0 )
 C     Select clusters before matching (eclus).  However, remove clusters
@@ -255,6 +266,9 @@ C     for rejected clusters store index:
                      imtst(nclus)= -1
                   endif
                endif
+               if( icall.le.nwvect ) then
+                  print *, (plgcl(j,nlgcl),j=1,4), ecorr, iw(i+1)
+               endif
             else
                nrejlg= nrejlg + 1
             endif
@@ -284,6 +298,8 @@ C     (akward, but corresponds to JADE ze4v based event selection):
      &        , ievnt
       endif
  200  continue
+ 201  format( 5(1x,f6.3),1x,i3 )
+
 C     Fill ntuple with cluster based event selection variables:
       eb= eeb
       ee(1)= eee1
