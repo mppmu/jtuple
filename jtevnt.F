@@ -83,7 +83,8 @@ C     Check number of tracks in PATR bank:
             goto 100
          endif
          if( icall.le.nwvect ) 
-     &        print *, 'JTEVNT: selected patr tracks:'
+     &        print *, 'JTEVNT: selected patr tracks event:'
+     &        , irun, ievnt
 C     Calculate event vertex:
          call ze4vvx( r, ntrvx )
          zvert= r(3)
@@ -105,9 +106,11 @@ C     Calculate track cut variables:
             call hfill( 121, float(nhitrz), 0.0, 1.0 )
             call hfill( 122, zvtrk, 0.0, 1.0 )
             call hfill( 123, rmin, 0.0, 1.0 )
+            call hfill( 124, ptot, 0.0, 1.0 )
             call hfill( 125, pxy, 0.0, 1.0 )
 C     Select tracks and count rejected tracks in a strange way a la ze4vpk:
-C     Reject tracks with ptot>4/3ebeam in addition 
+C     Reject tracks with ptot > 4/3ebeam in addition, but for ze4v
+C     compatibility reject tracks with ptot > ebeam:
             lacc= .true.
             if( nhitrp.lt.nhrpct ) then
                lacc= .false.
@@ -133,7 +136,6 @@ C     Reject tracks with ptot>4/3ebeam in addition
                   nrejp= nrejp + 1
                endif
             endif
-            call hfill( 124, ptot, 0.0, 1.0 )
             if( lacc ) then
                npatr= npatr + 1
                ntrk= ntrk + 1
@@ -223,7 +225,8 @@ C     Check number of clusters in bank:
             goto 200
          endif
          if( icall.le.nwvect )
-     &        print *, 'JTEVNT: selected lgcl clusters:'
+     &        print *, 'JTEVNT: selected lgcl clusters event:'
+     &        , irun, ievnt
 C     Get "general information" for cross checks:
          geclus= rw(nplgcl+ip1+6)
 C     Loop over clusters (watch japanese pointer handling JCN 14D):

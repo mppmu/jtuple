@@ -71,8 +71,10 @@ C     zvtrk not present, use xdz(i) instead:
             call hfill( 123, rmin, 0.0, 1.0 )
             call hfill( 124, ptot, 0.0, 1.0 )
             call hfill( 125, pxy, 0.0, 1.0 )
-C     Select tracks and count rejected tracks in a strange way a la ze4vpk,
-C     reject tracks with ptot > 4/3*ebeam in addition:
+C     Select tracks and count rejected tracks in a strange way a la ze4vpk.
+C     Catch tracks set to ptot= 0.5*ebeam by ze4vpk, they had ptot>ebeam;
+C     so rejecting tracks with ptot > 4/3*ebeam (see jtevent.F) does not
+C     make sense here:
             lacc= .true.
             if( nhitrp.lt.nhrpct ) then
                lacc= .false.
@@ -86,8 +88,6 @@ C     reject tracks with ptot > 4/3*ebeam in addition:
             elseif( abs(rmin).gt.rminct ) then
                lacc= .false.
                nrejrm= nrejrm + 1
-c            elseif( ptot.lt.pcut .or. ptot.gt.4.0/3.0*ebeam ) then
-C     Catch tracks set to p_tot= 0.5*ebeam by ze4vpk, they had p_tot>ebeam:
             elseif( ptot.lt.pcut .or. 
      &              abs(ptot-0.5*ebeam).lt.1.0e-5 ) then
                lacc= .false.
@@ -148,7 +148,8 @@ C     Get JADE matching info:
                endif
                etot= etot + eclus
                etotmt= etotmt + ecorr
-C     Energy sums in barrel and endcaps for event selection:
+C     Energy sums in barrel and endcaps for event selection, note that
+C     the uncorrected cluster energies are summed:
                iebee= ixlgp(i)
                if( iebee.eq.-1 ) then
                   eee1= eee1 + eclus
@@ -209,13 +210,6 @@ C     Fill ntuple with cluster based event selection variables:
       call hfill( 107, eeb, 0.0, 1.0 )
       call hfill( 130, etot, 0.0, 1.0 )
       call hfill( 131, etotmt, 0.0, 1.0 )
-
-c      do i= 1, npatr
-c         print *, (ppatr(j,i)/sqrt(ppatr(4,i)**2-mpi**2),j=1,3)
-c      enddo
-c      do i= 1, nlgcl
-c         print *, (plgcl(j,i)/plgcl(4,i),j=1,3)
-c      enddo
 
 C     Fill arrays with all selected particles before and after JADE 
 C     cluster matching:
