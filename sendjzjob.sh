@@ -9,17 +9,18 @@
 echo job starts at `date`
 
 # Check current platform
-if [ `uname` != 'Linux' ] ; then
-   echo Current platform is not supported.
-   exit 1
-fi
+#if [ `uname` != 'Linux' ] ; then
+#   echo Current platform is not supported.
+#   exit 1
+#fi
 
 # Path to jzjob executeable:
 JTPATH=${PWD}
 
 # Directory for job execution:
-JOBDIR=/remote/pcl246/skluth/jade/jobs/jzread
-
+#JOBDIR=/remote/pcl246/skluth/jade/jobs/jzread
+#JOBDIR=/afs/ipp/home/j/jschieck/public/zv
+JOBDIR=/afs/ipp/mpp/atlas/data/002/jade/dat/
 # Base for names:
 BNAME=$1
 
@@ -60,6 +61,7 @@ done
 cat >> ${NAME}.ffr << EOF
 JTUPLE 1=44 3='${NAME}.hbook'
 ZE4VFORM ${ZE4VFORM}
+TRKCUT 20 12 350.0 100.0 0.1
 STOP
 EOF
 

@@ -18,10 +18,14 @@ fi
 JTPATH=${PWD}
 
 # Directory for job execution:
-JOBDIR=/remote/pcl246/skluth/jade/jobs/jtuple
+#JOBDIR=/remote/pcl246/skluth/jade/jobs/jtuple
+#JOBDIR=/afs/ipp/mpp/atlas/data/002/jade/jobs/jtuple/
+JOBDIR=/afs/ipp/home/j/jschieck/public/mc/
+
 
 # Set up JADE environment:
-JADEPATH=/mnt/home/pcl246/skluth/qcd/jadesoft
+#JADEPATH=/mnt/home/pcl246/skluth/qcd/jadesoft
+JADEPATH=/afs/ipp-garching.mpg.de/home/j/jschieck/public/jadesoft
 cd ${JADEPATH}
 . ./Init_jade_env.ksh
 

@@ -7,8 +7,8 @@
          LD = $(FC)
     LDFLAGS = -g -Wl,-m,-bloadmap:MAIN.map,-bnoquiet
 
-        AWK = /usr/local/bin/gawk
+        AWK = gawk
 
-        GCC = /usr/local/bin/gcc
+        GCC = gcc
 
 include GNUmake-rules
