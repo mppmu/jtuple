@@ -1,0 +1,14 @@
+# Makefile to compile Jade ntuple code
+
+# IBM Fortran compiler/linker and other tools:
+         FC = /usr/bin/xlf
+     FFLAGS = -qsigtrap -g -qsave -qrndsngl -qmaxmem=-1 -qextname -qfloat=fltint:hsflt:hssngl:nans:rndsngl -qcharlen=32767 -qxlf77=leadzero -qfullpath -qctyplss -qintlog
+
+         LD = $(FC)
+    LDFLAGS = -g -Wl,-m,-bloadmap:MAIN.map,-bnoquiet
+
+        AWK = /usr/local/bin/gawk
+
+        GCC = /usr/local/bin/gcc
+
+include GNUmake-rules

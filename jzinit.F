@@ -1,10 +1,10 @@
-      subroutine jtinit
+      subroutine jzinit
       implicit none
 
-#include "jtffr.inc"
+#include "jzffr.inc"
 #include "jtstat.inc"
 
-      print *, 'JTINIT: book histos and create ntuple'
+      print *, 'JZINIT: book histos and create ntuple'
 
 C     Initialise statistics counters:
       nrejrp= 0
@@ -17,12 +17,7 @@ C     Initialise statistics counters:
       nnonr= 0
       ndnonr= 0
 
-C     Open file for ascii BOS bank writing:
-      if( lbankw ) then
-         open( iobank, file=cbankf, status='unknown', form='formatted' )
-      endif
-
-C     Book ntuple and histos:
+C     Book ntuple:
       call jtbknt( lmc, langl )
 
 C     The End:

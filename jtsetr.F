@@ -36,7 +36,6 @@ C     Define FFREAD keys:
       nhrzct= 12
       zvct= 350.0
       rminct= 50.0
-c      pcut= 0.05
       pcut= 0.1
       call ffkey( 'TRKCUT', nhrpct, 5, 'MIXED' )
       elgct= 0.150

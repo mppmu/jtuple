@@ -1,0 +1,19 @@
+# Makefile to compile Jade ntuple code on linux pc
+
+# Fortran compiler/linker and other tools:
+        OPT = -g
+
+         FC = /usr/bin/g77
+     FFLAGS = $(OPT) -c -Wall -fno-globals
+
+
+         LD = $(FC)
+    LDFLAGS = $(OPT)
+
+        AWK = /usr/bin/gawk
+
+        GCC = /usr/bin/gcc
+
+  EXTRALIBS = nsl
+
+include GNUmake-rules

@@ -55,8 +55,8 @@ while [ $idx -lt $STOP ]
 do
 ((idx=$idx+1))
 cat >> ${NAME}.ffr << EOF
-*SVBOSF '${SVBOS}.${idx}.bos'
-C *SVBOSF '${SVBOS}.bos.${idx}'
+C *SVBOSF '${SVBOS}.${idx}.bos'
+*SVBOSF '${SVBOS}.bos.${idx}'
 EOF
 done
 # Other cards:

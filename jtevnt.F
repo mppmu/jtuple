@@ -22,6 +22,7 @@ C     Local declarations:
      &     , ihtype(maxtrk), iflav, nvect, nhad, npart
      &     , ipchge(maxtrk), iptype(maxtrk), ipar(maxtrk)
      &     , ipdec(maxtrk), npall, ipart, npisr, imtst(maxtrk), icall
+     &     , itrkvx(maxtrk)
       real ptrak(itkdm,maxtrk), plgcl(itkdm,maxtrk)
      &     , ppatr(itkdm,maxtrk), ptrkmt(itkdm,maxtrk)
      &     , phad(itkdm,maxtrk), ppart(itkdm,maxtrk)
@@ -88,8 +89,7 @@ C     Loop over tracks in PATR bank:
          ipstrt= iw(nppatr+1) + nppatr
          ipend= ipstrt + (ntr-1)*nword
          do i= ipstrt, ipend, nword
-C     Calculate cut variables and select tracks:
-            lacc= .true.
+C     Calculate track cut variables:
             nhitrp= iw(i+24)
             nhitrz= iw(i+33)
             zvtrk= rw(i+31)
@@ -105,6 +105,7 @@ C     Calculate cut variables and select tracks:
             call hfill( 125, pxy, 0.0, 1.0 )
 C     Select tracks and count rejected tracks in a strange way a la ze4vpk:
 C     Reject tracks with ptot>4/3ebeam in addition 
+            lacc= .true.
             if( nhitrp.lt.nhrpct ) then
                lacc= .false.
                nrejrp= nrejrp + 1
@@ -137,8 +138,11 @@ C     Reject tracks with ptot>4/3ebeam in addition
                   print *, 'JTEVNT: more than ', maxtrk, 
      &                 ' selected tracks in event ', irun, ievnt
                endif
-C     Count tracks for event selection:
-               if( rmin.lt.30.0 ) ntrkvx= ntrkvx + 1
+C     Count "vertex" and "good" tracks for event selection:
+               if( rmin.lt.30.0 ) then
+                  ntrkvx= ntrkvx + 1
+                  itrkvx(ntrkvx)= npatr
+               endif
                if( pxy.gt.0.500 .and. nhitrp.gt.24 ) ntrkgd= ntrkgd + 1
             endif
          enddo
@@ -148,6 +152,31 @@ C     Count tracks for event selection:
      &        , ievnt
       endif
  100  continue
+C     Fill ntuple variables for track based event selection variables:
+      inttr= ntrkvx
+      iltr= ntrkgd
+      call hfill( 108, float(ntrkvx), 0.0, 1.0 )
+      call hfill( 109, float(ntrkgd), 0.0, 1.0 )
+C     In case of 4 tracks check for 1- vs 3-prong configurations:
+C     npatr, ntrkvx or ntrkgd? Choose "vertex" tracks:
+      itauct= 1
+      if( ntrkvx.eq.4 ) then
+         do i= 1, 4
+            ndotn= 0
+            do j= 1, 4
+               if( i.ne.j ) then
+                  rdot= vdot( ppatr(1,itrkvx(i)), 
+     &                        ppatr(1,itrkvx(j)), 3 )
+                  if( rdot.lt.0.0 ) ndotn= ndotn + 1
+               endif
+            enddo
+            if( ndotn.eq.3 ) then
+               itauct= 0
+               goto 300
+            endif
+         enddo
+      endif
+ 300  continue
 
 C     Get LGCL bank and select clusters:
       eee1= 0.0
@@ -240,58 +269,14 @@ C     Energy sums in barrel and endcaps for event selection:
      &        , ievnt
       endif
  200  continue
-
-C     Event selection with ze4v variables only for compatibility
-C     with ze4v only real data, i.e. selected tracks and clusters
-C     after JADE cluster matching:
-      lacc= .true.
-C     LG-cluster energy sums in EE and EB calculated after
-C     JADE cluster matching and selection:
-      call hfill( 105, eee1, 0.0, 1.0 )
-      call hfill( 106, eee2, 0.0, 1.0 )
-      call hfill( 107, eeb, 0.0, 1.0 )
+C     Fill ntuple with cluster based event selection variables:
       eb= eeb
       ee(1)= eee1
       ee(2)= eee2
-      if( ebeam.lt.8.0 ) then
-         if( eee1.lt.0.2 .and. eee2.lt.0.2 .and. eeb.lt.1.2 )
-     &        lacc= .false.
-      elseif( ebeam.ge.8.0 .and. ebeam.lt.12.0 ) then
-         if( eee1.lt.0.4 .and. eee2.lt.0.4 .and. eeb.lt.2.0 )
-     &        lacc= .false.
-      elseif( ebeam.ge.12.0 ) then
-         if( eee1.lt.0.4 .and. eee2.lt.0.4 .and. eeb.lt.4.0 )
-     &        lacc= .false.
-      else
-         print *, 'JTEVNT: beam energy outside range: ', ebeam
-      endif
-C     Number of good tracks and tracks from vertex region:
-      call hfill( 108, float(ntrkvx), 0.0, 1.0 )
-      call hfill( 109, float(ntrkgd), 0.0, 1.0 )
-      inttr= ntrkvx
-      iltr= ntrkgd
-      if( ntrkvx.lt.4 ) lacc= .false.
-      if( ntrkgd.lt.3 ) lacc= .false.
-C     In case of 4 tracks check for 1- vs 3-prong configurations:
-C     npatr, ntrkvx or ntrkgd?
-      itauct= 1
-      if( ntrkvx.eq.4 ) then
-         do i= 1, 4
-            ndotn= 0
-            do j= 1, 4
-               if( i.ne.j ) then
-                  rdot= vdot( ppatr(1,i), ppatr(1,j), 3 )
-                  if( rdot.lt.0.0 ) ndotn= ndotn + 1
-               endif
-            enddo
-            if( ndotn.eq.3 ) then
-               lacc= .false.
-               itauct= 0
-               goto 300
-            endif
-         enddo
-      endif
- 300  continue
+      call hfill( 105, eee1, 0.0, 1.0 )
+      call hfill( 106, eee2, 0.0, 1.0 )
+      call hfill( 107, eeb, 0.0, 1.0 )
+
 C     Fill arrays with all selected particles before and after JADE 
 C     cluster matching and calculate 4-momentum sum from MT list:
       call pxcopa( 1, npatr, 4, itkdm, ppatr, itkdm, ptrak )
@@ -310,50 +295,25 @@ C     cluster matching and calculate 4-momentum sum from MT list:
             enddo
          endif
       enddo
+C     Fill event 4-mom in ntuple:
       call vzero( psum, 4 )
       do i= 1, ntrkmt
          call pxaddv( 4, ptrkmt(1,i), psum, psum )
       enddo
       call pxcopv( 4, psum, pgce )
-C     Visible energy and z-momentum balance:
-      evis= psum(4)
-      pzbal= psum(3)
-      if( evis.gt.0.0 ) pzbal= pzbal/evis
-      call hfill( 110, evis/ebeam, 0.0, 1.0 )
-      call hfill( 111, pzbal, 0.0, 1.0 )
-      if( evis.lt.ebeam ) lacc= .false.
-      if( abs(pzbal).gt.0.4 ) lacc= .false.
-C     Cut on event vertex z position:
-      call hfill( 112, zvert,  0.0, 1.0 )
-      if( zvert.gt.150.0 ) lacc= .false.
-C     cos(Theta_T):
-      costt= 1
+C     cos(Theta_T), put thrust vector in ntuple:
       if( ntrkmt.ge.2 ) then
          call pxlth4( ntrkmt, itkdm, ptrkmt, thrval, thrvec, ierr )
          if( ierr.eq.0 ) then
-            costt= thrvec(3,3)/sqrt(thrvec(1,3)**2+thrvec(2,3)**2
-     &           +thrvec(3,3)**2)
             call pxcopv( 3, thrvec(1,3), tvectc )
          else
             print *, 'JTEVNT: pxlth4 failed, reject event ', irun, ievnt
             call vzero( tvectc, 3 )
          endif
       endif
-      call hfill( 113, costt,  0.0, 1.0 )
-      if( abs(costt).gt.0.8 ) lacc= .false.
-C     Missing momentum:
-      pmiss= sqrt( psum(1)**2 + psum(2)**2 + psum(3)**2 )
-      call hfill( 114, pmiss/ebeam,  0.0, 1.0 )
-      if( pmiss.gt.0.6*ebeam ) lacc= .false.
 
-C     Accumulate event selection statistics:
-      nevtot= nevtot+1
-      if( lacc ) then
-         nevacc= nevacc+1
-         itkmh= 1
-      else
-         itkmh= 0
-      endif
+C     Do event selection and count statistics:
+      call jtevsl( lacc )
 
 C     Tracks and all clusters:
       call qqevsh( itkdm, ntrak, ptrak
