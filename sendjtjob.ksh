@@ -66,7 +66,7 @@ cat >> ${NAME}.ffr << EOF
 JTUPLE 1=44 3='${NAME}.hbook'
 CALIB '${CALFILE}'
 C MAXREC 102
-ZE4VMODE off
+ZE4VMODE on
 STOP
 EOF
 

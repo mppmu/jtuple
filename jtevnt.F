@@ -147,7 +147,7 @@ C     Reject tracks with ptot>4/3ebeam in addition
                   d0(ntrk)= rmin
                   id02(ntrk)= 1
                   if( icall.le.nwvect ) then
-                     print *, (ppatr(j,npatr),j=1,4), nint(charge)
+                     print 101, (ppatr(j,npatr),j=1,4), nint(charge)
      &                    , rmin
                   endif
                else
@@ -275,7 +275,7 @@ C     for rejected clusters store index:
                   endif
                endif
                if( icall.le.nwvect ) then
-                  print *, (plgcl(j,nlgcl),j=1,4), ecorr, iw(i+1)
+                  print 201, (plgcl(j,nlgcl),j=1,4), ecorr, iw(i+1)
                endif
             else
                nrejlg= nrejlg + 1
