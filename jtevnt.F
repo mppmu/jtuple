@@ -30,7 +30,7 @@ C     Local declarations:
       real r(3), rdoca(3), pmom(3), charge, cap, rmin, phim, sig, ptot
      &     , eclus, ecorr, dzds, pxy, eee1, eee2, eeb
      &     , rdot, psum(4), pmiss, thrval(3), thrvec(3,3), costt, minv
-     &     , minvh, etot, geclus, pzbal, evis, zvtrk
+     &     , minvh, etot, geclus, pzbal, evis, zvtrk, etest
 
       data icall / 0 /
 
@@ -90,6 +90,7 @@ C     Loop over tracks in PATR bank:
          ipend= ipstrt + (ntr-1)*nword
          do i= ipstrt, ipend, nword
 C     Calculate track cut variables:
+            ntottk= ntottk + 1
             nhitrp= iw(i+24)
             nhitrz= iw(i+33)
             zvtrk= rw(i+31)
@@ -209,6 +210,7 @@ C     Loop over clusters (watch japanese pointer handling JCN 14D):
          ipend= ipstrt + (nclst-1)*nword
          do i= ipstrt, ipend, nword
 C     Energy and track connection info:
+            ntotlg= ntotlg + 1
             eclus= rw(i+2)
             etot= etot+eclus
             iconn= iw(i+8)
@@ -219,8 +221,12 @@ C     path length dependence for barrel clusters (JADE cluster matching):
             if( iw(j+1).eq.0 ) dzds= 1.0/sqrt(1.0-rw(j+11)**2)
             ecorr= eclus - elgmin*(iconn/100)*dzds
             if( ecorr.gt.0.0 ) call hfill( 131, ecorr, 0.0, 1.0 )
-C     Select clusters before matching:
-            if( eclus.ge.elgct ) then
+C     Select clusters before matching (eclus).  However, remove clusters
+C     with ecorr < elgct (matched clusters) from cluster array for
+C     compatibility with ze4v-based data analysis if demanded:
+            etest= eclus
+            if( lze4v ) etest= ecorr
+            if( etest.ge.elgct ) then
                nlgcl= nlgcl + 1
                nclus= nclus + 1
                do j= 1, 3
@@ -244,6 +250,8 @@ C     for rejected clusters store index:
                      imtst(nclus)= -1
                   endif
                endif
+            else
+               nrejlg= nrejlg + 1
             endif
 C     Energy sums in barrel and endcaps for event selection, sum 
 C     uncorrected cluster energies for clusters selected after matching

@@ -16,6 +16,9 @@ C     Initialise statistics counters:
       nevtot= 0
       nnonr= 0
       ndnonr= 0
+      nrejlg= 0
+      ntottk= 0
+      ntotlg= 0
 
 C     Open file for ascii BOS bank writing:
       if( lbankw ) then

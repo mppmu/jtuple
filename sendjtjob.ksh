@@ -21,7 +21,7 @@ JTPATH=${PWD}
 JOBDIR=/remote/pcl246/skluth/jade/jobs/jtuple
 
 # Set up JADE environment:
-JADEPATH=/remote/pcl246/skluth/jade/jadesoft
+JADEPATH=/mnt/home/pcl246/skluth/qcd/jadesoft
 cd ${JADEPATH}
 . ./Init_jade_env.ksh
 
@@ -58,7 +58,6 @@ while [ $idx -lt $STOP ]
 do
 ((idx=$idx+1))
 cat >> ${NAME}.ffr << EOF
-C *SVBOSF '${SVBOS}.${idx}.bos'
 *SVBOSF '${SVBOS}.bos.${idx}'
 EOF
 done
@@ -67,6 +66,7 @@ cat >> ${NAME}.ffr << EOF
 JTUPLE 1=44 3='${NAME}.hbook'
 CALIB '${CALFILE}'
 C MAXREC 102
+ZE4VMODE on
 STOP
 EOF
 

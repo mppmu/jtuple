@@ -6,7 +6,7 @@
         PWD = $(shell pwd)
 
 # Location of JADE libraries:
-       JADE = /remote/pcl246/skluth/jade/jadesoft
+       JADE = /mnt/home/pcl246/skluth/qcd/jadesoft
 #   JADELIBS = interface jadegs boslib source zlib
    JADELIBS = interface jadegs boslib zlib
 

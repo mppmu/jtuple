@@ -1,5 +1,6 @@
 C -*- mode: fortran -*-
       integer nrejrp, nrejrz, nrejzv, nrejrm, nrejp, nevacc, nevtot
-      integer nnonr, ndnonr
+      integer nnonr, ndnonr, nrejlg, ntottk, ntotcl
       common /jtstat/ nrejrp, nrejrz, nrejzv, nrejrm, nrejp, nevacc
-     &     , nevtot, nnonr, ndnonr
+     &     , nevtot, nnonr, ndnonr, nrejlg, ntottk, ntotcl
+      save /jtstat/

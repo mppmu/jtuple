@@ -22,6 +22,7 @@ C  Ntuple booking character strings:
       common /qqchar/ chdagn, chjdct, chdaev, chdaan, chdajt
      &     , chdact, chdacl
      &     , chmcgn, chmcev, chmcan, chmcjt, chmcpt, chmcct
+      save /qqchar/
 C  Detector level:
       integer irun,ievnt,itkmh,igpmh,isist,icvst,icjst,iczst,iebst
      &       ,ieest,istg1,ntkd02
@@ -30,10 +31,12 @@ C  Detector level:
      &      irun,ievnt,itkmh,igpmh,isist,icvst,icjst,iczst,iebst
      &     ,ieest,istg1,ntkd02
      &     ,ebeam,pgce,tvectc
+      save /qqdagn/
       integer ino, inttr, iltr, itauct, imcred, njdct(2)
       real eb, ee(2), zvert
       common /jdcuts/ ino, inttr, iltr, itauct, imcred, njdct
      &     , eb, ee, zvert
+      save /jdcuts/
       real tdtc,tmadtc,tmidtc,mhdtc,mldtc,btdtc,bwdtc,cpdtc,dpdtc,sdtc
      &    ,adtc,acpdtc
      &    ,tdt,tmadt,tmidt,mhdt,mldt,btdt,bwdt,cpdt,dpdt,sdt,adt,acpdt
@@ -47,6 +50,7 @@ C  Detector level:
      &     ,tdc,tmadc,tmidc,mhdc,mldc,btdc,bwdc,cpdc,dpdc,sdc,adc,acpdc
      &     ,tdmt,tmadmt,tmidmt,mhdmt,mldmt,btdmt,bwdmt,cpdmt,dpdmt,sdmt
      &     ,admt,acpdmt
+      save /qqdaev/
       real  bzdtc,kswdtc,nrdtc,c34dtc
      &     ,bzdt,kswdt,nrdt,c34dt
      &     ,bzdc,kswdc,nrdc,c34dc
@@ -56,6 +60,7 @@ C  Detector level:
      &     ,bzdt,kswdt,nrdt,c34dt
      &     ,bzdc,kswdc,nrdc,c34dc
      &     ,bzdmt,kswdmt,nrdmt,c34dmt
+      save /qqdaan/
       integer nxjdtc,nxjdt,nxjdc,nxjdmt
       integer nxjetc,nxjet,nxjec,nxjemt
       integer nxjctc,nxjct,nxjcc,nxjcmt
@@ -72,6 +77,7 @@ C  Detector level:
      &     ,yddt,yedt,ycdt,njcedt,njcrdt
      &     ,yddc,yedc,ycdc,njcedc,njcrdc
      &     ,yddmt,yedmt,ycdmt,njcedmt,njcrdmt
+      save /qqdajt/
       integer ntrk,id02(maxtrk),nhde(maxtrk),nhcj(maxtrk),ichg(maxtrk)
      &     ,nmttrk,imttrk(maxtrk)
       real dedx(maxtrk),dded(maxtrk),dp(maxtrk)
@@ -80,10 +86,12 @@ C  Detector level:
      &      ntrk,id02,dedx,dded,nhde,dp
      &     ,ptrk,ichg,nhcj,z0,d0
      &     ,nmttrk,imttrk,mtscft
+      save /qqdatk/
       integer nclus,nmtcls,imtcls(maxtrk),nmtkil,imtkil(maxtrk)
       real pclus(3,maxtrk),mtscfc(maxtrk)
       common /qqdacl/
      &     nclus,nmtcls,imtcls,nmtkil,imtkil,pclus,mtscfc
+      save /qqdacl/
 C  MC hadron and parton-level:
       integer maxprt,maxprf
       parameter( maxprt=50, maxprf=4 )
@@ -91,14 +99,17 @@ C  MC hadron and parton-level:
       real pisr(4),primf(4,maxprf)
       common /qqmcgn/
      &     ievtyp,inonr,pisr,nprimf,iferid,primf
+      save /qqmcgn/
       real tp,tmap,tmip,mhp,mlp,btp,bwp,cpp,dpp,sp,ap,acpp
      &    ,th,tmah,tmih,mhh,mlh,bth,bwh,cph,dph,sh,ah,acph
       common /qqmcev/
      &     tp,tmap,tmip,mhp,mlp,btp,bwp,cpp,dpp,sp,ap,acpp
      &    ,th,tmah,tmih,mhh,mlh,bth,bwh,cph,dph,sh,ah,acph
+      save /qqmcev/
       real bzp,kswp,nrp,c34p,bzh,kswh,nrh,c34h
       common /qqmcan/
      &     bzp,kswp,nrp,c34p,bzh,kswh,nrh,c34h
+      save /qqmvan/
       integer nxjdp,nxjdh
       integer nxjep,nxjeh
       integer nxjcp,nxjch
@@ -110,6 +121,7 @@ C  MC hadron and parton-level:
      &    ,nxjcp,nxjch
      &    ,ydp,yep,ycp,njcep,njcrp
      &    ,ydh,yeh,ych,njceh,njcrh
+      save /qqmcjt/
       integer ntrkp,ilucp(maxprt)
       real ptrkp(4,maxprt)
       common /qqpart/ ntrkp,ilucp,ptrkp
@@ -119,3 +131,4 @@ C  MC hadron and parton-level:
       common /qqmchd/
      &      ntrkh,ntrk2,ptrkh
      &     ,iluch,iluc,istrt,ichgh
+      save /qqmchd/

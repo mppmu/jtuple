@@ -22,6 +22,8 @@ C     Define FFREAD keys:
       call ffkey( 'LANGL', langl, 1, 'LOGI' )
       lmc= .true.
       call ffkey( 'MCNTUP', lmc, 1, 'LOGI' )
+      lze4v= .false.
+      call ffkey( 'ZE4VMODE', lze4v, 1, 'LOGI' )
       maxrec= 10002
       call ffkey( 'MAXREC', maxrec, 1, 'INTE' )
       iobank= 41
