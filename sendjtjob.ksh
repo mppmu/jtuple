@@ -21,7 +21,7 @@ JTPATH=${PWD}
 JOBDIR=/remote/pcl246/skluth/jade/jobs/jtuple
 
 # Set up JADE environment:
-JADEPATH=/remote/pcl246/skluth/jade/test/jadesoft
+JADEPATH=/remote/pcl246/skluth/jade/jadesoft
 cd ${JADEPATH}
 . ./Init_jade_env.ksh
 
