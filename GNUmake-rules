@@ -6,15 +6,17 @@
         PWD = $(shell pwd)
 
 # Location of JADE libraries:
-#       JADE = /mnt/home/pcl246/skluth/qcd/jadesoft
-       JADE =  /afs/ipp-garching.mpg.de/home/j/jschieck/public/jadesoft
+       JADE = /mnt/home/pcl246/skluth/qcd/jadesoft
+#       JADE =  /afs/ipp-garching.mpg.de/home/j/jschieck/public/jadesoft
 #   JADELIBS = interface jadegs boslib source zlib
    JADELIBS = interface jadegs boslib zlib
 
 # CERNLIB:
-   CERNROOT = /afs/ipp-garching.mpg.de/home/j/jschieck/cernlib
+#   CERNROOT = /afs/ipp-garching.mpg.de/home/j/jschieck/cernlib
+   CERNROOT = /cern/pro
     CERNLIB = $(CERNROOT)/lib
-   CERNLIBS = kernlib packlib mathlib  lapack_RS6K blas_RS6K $(EXTRALIBS)
+#   CERNLIBS = kernlib packlib mathlib  lapack_RS6K blas_RS6K $(EXTRALIBS)
+   CERNLIBS = kernlib packlib mathlib $(EXTRALIBS)
 
 # Targets of libraries with and without include files:
  LIBZREADOBJS = jadev.o jadepr.o endian.o jzsetr.o jzinit.o jzevnt.o jzfnsh.o

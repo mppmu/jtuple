@@ -17,12 +17,12 @@ C     Local declarations:
       integer nphead, nph2, nppatr, nplgcl, npvect, nppall, nword
       integer i, j, ntrak, ntr, ipstrt, ipend, nwptrk
      &     , nhitrp, nhitrz, ip1, ip2, ip3, nwpcl, nlgcl
-     &     , iconn, nclst, ntrkvx, ntrkgd, ndotn
+     &     , iconn, nclst, ntrkvx, ntrkgd, ntrklg, ntrkt, ndotn
      &     , iebee, ntrvx, npatr, ierr, ntrkmt, ihchge(maxtrk)
      &     , ihtype(maxtrk), iflav, nvect, nhad, npart
      &     , ipchge(maxtrk), iptype(maxtrk), ipar(maxtrk)
      &     , ipdec(maxtrk), npall, ipart, npisr, imtst(maxtrk), icall
-     &     , itrkvx(maxtrk)
+     &     , itrkt(maxtrk)
       real ptrak(itkdm,maxtrk), plgcl(itkdm,maxtrk)
      &     , ppatr(itkdm,maxtrk), ptrkmt(itkdm,maxtrk)
      &     , phad(itkdm,maxtrk), ppart(itkdm,maxtrk)
@@ -72,6 +72,7 @@ C     Get PATR bank, loop over tracks and fill arrays:
       npatr= 0
       ntrkgd= 0
       ntrkvx= 0
+      ntrklg= 0
       nppatr= iw( ibln( 'PATR' ) )
       if( nppatr.gt.0 ) then
 C     Check number of tracks in PATR bank:
@@ -98,8 +99,12 @@ C     Calculate track cut variables:
             nhitrp= iw(i+24)
             nhitrz= iw(i+33)
             zvtrk= rw(i+31)
-            call prtoci( i, cap, rmin, phim, sig )
             call crdoca( i, r, pmom, rdoca, charge )
+            if( lpedro ) then
+               rmin= sqrt( rdoca(1)**2 + rdoca(2)**2 )
+            else
+               call prtoci( i, cap, rmin, phim, sig )
+            endif
             ptot= sqrt( pmom(1)**2 + pmom(2)**2 + pmom(3)**2 )
             pxy= sqrt( pmom(1)**2 + pmom(2)**2 )
             call hfill( 120, float(nhitrp), 0.0, 1.0 )
@@ -110,7 +115,8 @@ C     Calculate track cut variables:
             call hfill( 125, pxy, 0.0, 1.0 )
 C     Select tracks and count rejected tracks in a strange way a la ze4vpk:
 C     Reject tracks with ptot > 4/3ebeam in addition, but for ze4v
-C     compatibility reject tracks with ptot > ebeam:
+C     compatibility reject tracks with ptot > ebeam.  In "Pedro" mode
+C     accept such tracks but set their momentum to 0.5*ebeam
             lacc= .true.
             if( nhitrp.lt.nhrpct ) then
                lacc= .false.
@@ -129,8 +135,14 @@ C     compatibility reject tracks with ptot > ebeam:
                nrejp= nrejp + 1
             elseif( ptot.gt.ebeam ) then
                if( lze4v ) then
-                  lacc= .false.
-                  nrejp= nrejp + 1
+                  if( lpedro ) then
+                     do j= 1, 3
+                        pmom(j)= pmom(j)*ebeam*0.5/ptot
+                     enddo
+                  else
+                     lacc= .false.
+                     nrejp= nrejp + 1
+                  endif
                elseif( ptot.gt.4.0/3.0*ebeam ) then
                   lacc= .false.
                   nrejp= nrejp + 1
@@ -159,9 +171,23 @@ C     compatibility reject tracks with ptot > ebeam:
 C     Count "vertex" and "good" tracks for event selection:
                if( abs(rmin).lt.30.0 ) then
                   ntrkvx= ntrkvx + 1
-                  itrkvx(ntrkvx)= npatr
+                  if( .not.lpedro ) itrkt(ntrkvx)= npatr
                endif
-               if( pxy.gt.0.500 .and. nhitrp.gt.24 ) ntrkgd= ntrkgd + 1
+
+c               if( pxy.gt.0.500 .and. nhitrp.gt.24 ) ntrkgd= ntrkgd + 1
+
+               if( lpedro ) then
+                  if( pxy.gt.0.500 .and. (nhitrp.ge.24 
+     &                 .or. nhitrz.ge.24) ) ntrkgd= ntrkgd + 1
+                  if( (nhitrp.ge.24 .or. nhitrz.ge.24) ) then
+                     ntrklg= ntrklg + 1
+                     itrkt(ntrklg)= npatr
+                  endif
+               else
+                  if( pxy.gt.0.500 .and. nhitrp.gt.24 ) 
+     &                 ntrkgd= ntrkgd + 1
+               endif
+
             endif
          enddo
          call hfill( 101, float(npatr), 0.0, 1.0 )
@@ -181,13 +207,16 @@ C     Fill ntuple variables for track based event selection variables:
 C     In case of 4 tracks check for 1- vs 3-prong configurations:
 C     npatr, ntrkvx or ntrkgd? Choose "vertex" tracks:
       itauct= 1
-      if( ntrkvx.eq.4 ) then
+      ntrkt= ntrkvx
+      if( lpedro ) ntrkt= ntrklg
+c      if( ntrkvx.eq.4 ) then
+      if( ntrkt.eq.4 ) then
          do i= 1, 4
             ndotn= 0
             do j= 1, 4
                if( i.ne.j ) then
-                  rdot= vdot( ppatr(1,itrkvx(i)), 
-     &                        ppatr(1,itrkvx(j)), 3 )
+                  rdot= vdot( ppatr(1,itrkt(i)), 
+     &                        ppatr(1,itrkt(j)), 3 )
                   if( rdot.lt.0.0 ) ndotn= ndotn + 1
                endif
             enddo

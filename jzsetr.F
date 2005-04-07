@@ -14,6 +14,8 @@ C     Reset file counter:
       nbfile= 0
 
 C     Define FFREAD keys:
+      lpedro= .false.
+      call ffkey( 'PEDRO', lpedro, 1, 'LOGI' )
       lmc= .false.
       call ffkey( 'MCNTUP', lmc, 1, 'LOGI' )
       langl= .false.

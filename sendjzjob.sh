@@ -18,15 +18,18 @@ echo job starts at `date`
 JTPATH=${PWD}
 
 # Directory for job execution:
+JOBDIR=$1
+echo job directory is $JOBDIR
 #JOBDIR=/remote/pcl246/skluth/jade/jobs/jzread
 #JOBDIR=/afs/ipp/home/j/jschieck/public/zv
-JOBDIR=/afs/ipp/mpp/atlas/data/002/jade/dat/
+#JOBDIR=/afs/ipp/mpp/atlas/data/002/jade/dat/
+
 # Base for names:
-BNAME=$1
+BNAME=$2
 
 # File numbers in a series:
-START=$2
-STOP=$3
+START=$3
+STOP=$4
 
 # Set input ze4v file and ffread switch for input file type,
 # 'tr*' means data, otherwise assume MC input:
@@ -61,6 +64,7 @@ done
 cat >> ${NAME}.ffr << EOF
 JTUPLE 1=44 3='${NAME}.hbook'
 ZE4VFORM ${ZE4VFORM}
+PEDRO ON
 TRKCUT 20 12 350.0 100.0 0.1
 STOP
 EOF

@@ -20,9 +20,8 @@ C     Local declarations:
 
       logical lacc
       integer i, j, ierr
-      integer npatr, nlgcl, ntrkmt, nhitrp, nhitrz, itrkvx(maxtrk)
-     &     , ntrkvx, ntrkgd, ntrklg, iebee, ndotn, ntrak
-     &     , itrklg(maxtrk)
+      integer npatr, nlgcl, ntrkmt, nhitrp, nhitrz, itrkt(maxtrk)
+     &     , ntrkvx, ntrkgd, ntrklg, ntrkt, iebee, ndotn, ntrak
 
       real ppatr(itkdm,maxtrk), plgcl(itkdm,maxtrk)
      &     , ptrkmt(itkdm,maxtrk), psum(4), ptrak(itkdm,maxtrk)
@@ -64,8 +63,11 @@ C     Number of hits in r-phi and r-z according to ze4vpk packing:
             nhitrz= int(ixhits(i)/100)
 C     zvtrk not present, use xdz(i) instead:
             zvtrk= xdz(i)
-C            rmin= xrmin(i)
-            rmin= sqrt(xdx(i)**2+xdy(i)**2)
+            if( lpedro ) then
+               rmin= sqrt(xdx(i)**2+xdy(i)**2)
+            else
+               rmin= xrmin(i)
+            endif
             ptot= xp(i)
             pxy= sqrt( xex(i)**2 + xey(i)**2 )*xp(i)
             call hfill( 120, float(nhitrp), 0.0, 1.0 )
@@ -91,8 +93,10 @@ C     make sense here:
             elseif( abs(rmin).gt.rminct ) then
                lacc= .false.
                nrejrm= nrejrm + 1
-c            elseif( ptot.lt.pcut .or. 
-c     &              abs(ptot-0.5*ebeam).lt.1.0e-5 ) then
+            elseif( abs(ptot-0.5*ebeam).lt.1.0e-5 
+     &              .and. .not.lpedro ) then
+               lacc= .false.
+               nrejpp= nrejpp + 1
             elseif( ptot.lt.pcut ) then
                lacc= .false.
                nrejp= nrejp + 1
@@ -116,17 +120,20 @@ c     &              abs(ptot-0.5*ebeam).lt.1.0e-5 ) then
      &                 irun, ievnt, npatr, maxtrk
                endif
 C     Count "vertex" and "good" tracks for event selection:
-C changed JRS         if( abs(rmin).lt.30.0 ) then
                if( abs(rmin).lt.30.0 ) then
                   ntrkvx= ntrkvx + 1
-                  itrkvx(ntrkvx)= npatr
+                  if( .not.lpedro ) itrkt(ntrkvx)= npatr
                endif
-C               if( pxy.gt.0.500 .and. nhitrp.gt.24 ) ntrkgd= ntrkgd + 1
-               if( pxy.gt.0.500 .and. (nhitrp.ge.24 
-     &             .or. nhitrz.ge.24) ) ntrkgd= ntrkgd + 1
-               if( (nhitrp.ge.24 .or. nhitrz.ge.24) ) then
-                  ntrklg= ntrklg + 1
-                  itrklg(ntrklg)= npatr
+               if( lpedro ) then
+                  if( pxy.gt.0.500 .and. (nhitrp.ge.24 
+     &                 .or. nhitrz.ge.24) ) ntrkgd= ntrkgd + 1
+                  if( (nhitrp.ge.24 .or. nhitrz.ge.24) ) then
+                     ntrklg= ntrklg + 1
+                     itrkt(ntrklg)= npatr
+                  endif
+               else
+                  if( pxy.gt.0.500 .and. nhitrp.gt.24 ) 
+     &                 ntrkgd= ntrkgd + 1
                endif
             endif
             
@@ -194,16 +201,18 @@ C     Fill ntuple variables for track based event selection variables:
 C     In case of 4 tracks check for 1- vs 3-prong configurations:
 C     npatr, ntrkvx or ntrkgd? Choose "vertex" tracks:
       itauct= 1
+      ntrkt= ntrkvx
+      if( lpedro ) ntrkt= ntrklg
 c      if( ntrkvx.eq.4 ) then
-      if( ntrklg.eq.4 ) then
+      if( ntrkt.eq.4 ) then
          do i= 1, 4
             ndotn= 0
             do j= 1, 4
                if( i.ne.j ) then
 c                  rdot= vdot( ppatr(1,itrkvx(i)), 
 c     &                        ppatr(1,itrkvx(j)), 3 )
-                  rdot= vdot( ppatr(1,itrklg(i)), 
-     &                        ppatr(1,itrklg(j)), 3 )
+                  rdot= vdot( ppatr(1,itrkt(i)), 
+     &                        ppatr(1,itrkt(j)), 3 )
                   if( rdot.lt.0.0 ) ndotn= ndotn + 1
                endif
             enddo

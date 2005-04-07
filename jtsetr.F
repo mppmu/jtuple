@@ -14,6 +14,8 @@ C     Reset bosfile counter:
       nbfile= 0
 
 C     Define FFREAD keys:
+      lpedro= .false.
+      call ffkey( 'PEDRO', lpedro, 1, 'LOGI' )
       lbankw= .false.
       call ffkey( 'LBANKW', lbankw, 1, 'LOGI' )
       lcalib= .true.
