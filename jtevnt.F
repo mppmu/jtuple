@@ -373,6 +373,9 @@ C     Fill event 4-mom in ntuple:
          call pxaddv( 4, ptrkmt(1,i), psum, psum )
       enddo
       call pxcopv( 4, psum, pgce )
+
+      print *, 'PGCE', (i=1,4,pgce(i))
+
 C     cos(Theta_T), put thrust vector in ntuple:
       if( ntrkmt.ge.2 ) then
          call pxlth4( ntrkmt, itkdm, ptrkmt, thrval, thrvec, ierr )
