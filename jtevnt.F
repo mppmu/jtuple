@@ -99,11 +99,10 @@ C     Calculate track cut variables:
             nhitrp= iw(i+24)
             nhitrz= iw(i+33)
             zvtrk= rw(i+31)
+            call prtoci( i, cap, rmin, phim, sig )
             call crdoca( i, r, pmom, rdoca, charge )
             if( lpedro ) then
                rmin= sqrt( rdoca(1)**2 + rdoca(2)**2 )
-            else
-               call prtoci( i, cap, rmin, phim, sig )
             endif
             ptot= sqrt( pmom(1)**2 + pmom(2)**2 + pmom(3)**2 )
             pxy= sqrt( pmom(1)**2 + pmom(2)**2 )
