@@ -18,10 +18,10 @@ fi
 JTPATH=${PWD}
 
 # Directory for job execution:
+JOBDIR=$1
 #JOBDIR=/remote/pcl246/skluth/jade/jobs/jtuple
 #JOBDIR=/afs/ipp/mpp/atlas/data/002/jade/jobs/jtuple/
-JOBDIR=/afs/ipp/home/j/jschieck/public/mc/
-
+#JOBDIR=/afs/ipp/home/j/jschieck/public/mc/
 
 # Set up JADE environment:
 #JADEPATH=/mnt/home/pcl246/skluth/qcd/jadesoft
@@ -30,11 +30,11 @@ cd ${JADEPATH}
 . ./Init_jade_env.ksh
 
 # Base for names:
-BNAME=$1
+BNAME=$2
 
 # Bosfile numbers in a series:
-START=$2
-STOP=$3
+START=$3
+STOP=$4
 
 # Set input supervisor BOS file (no more than 78 characters)
 SVBOS=sv_${BNAME}
@@ -47,9 +47,6 @@ CALFILE=${JADE_CAL}/aupdat1.b
 
 # Go to scratch directory:
 cd ${JOBDIR}/${BNAME}
-# out=${BNAME}
-# mkdir -p $out
-# cd $out
 
 # Create FFREAD job steering:
 cat > ${NAME}.ffr << EOF
@@ -71,6 +68,7 @@ JTUPLE 1=44 3='${NAME}.hbook'
 CALIB '${CALFILE}'
 C MAXREC 102
 ZE4VMODE on
+PEDRO on
 STOP
 EOF
 

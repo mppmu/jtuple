@@ -20,9 +20,6 @@ JTPATH=${PWD}
 # Directory for job execution:
 JOBDIR=$1
 echo job directory is $JOBDIR
-#JOBDIR=/remote/pcl246/skluth/jade/jobs/jzread
-#JOBDIR=/afs/ipp/home/j/jschieck/public/zv
-#JOBDIR=/afs/ipp/mpp/atlas/data/002/jade/dat/
 
 # Base for names:
 BNAME=$2
@@ -64,7 +61,7 @@ done
 cat >> ${NAME}.ffr << EOF
 JTUPLE 1=44 3='${NAME}.hbook'
 ZE4VFORM ${ZE4VFORM}
-PEDRO ON
+PEDRO on
 TRKCUT 20 12 350.0 100.0 0.1
 STOP
 EOF
