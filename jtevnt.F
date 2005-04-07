@@ -138,6 +138,7 @@ C     accept such tracks but set their momentum to 0.5*ebeam
                      do j= 1, 3
                         pmom(j)= pmom(j)*ebeam*0.5/ptot
                      enddo
+                     ptot= ebeam*0.5
                   else
                      lacc= .false.
                      nrejp= nrejp + 1
