@@ -24,7 +24,7 @@ JOBDIR=$1
 #JOBDIR=/afs/ipp/home/j/jschieck/public/mc/
 
 # Set up JADE environment:
-JADEPATH=/mnt/home/pcl246/skluth/qcd/jadesoft
+JADEPATH=/mnt/home/pcl246/skluth/jade/jadesoft
 #JADEPATH=/afs/ipp-garching.mpg.de/home/j/jschieck/public/jadesoft
 cd ${JADEPATH}
 . ./Init_jade_env.ksh
