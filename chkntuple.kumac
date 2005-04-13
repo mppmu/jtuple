@@ -1,0 +1,42 @@
+macro chkntuple file opt=! 
+
+close 20
+h/del *
+h/file 20 [file] 0
+hrin 10
+uwfunc 10 qqntup.inc
+
+application comis quit
+!clear
+!file /mnt/home/pcl246/skluth/paw/libpx116.csl
+!file prthr.f77
+quit
+if $index( [file], '/mc' ).gt.0 then
+  application comis quit
+  !file rtph.f77
+  quit
+endif
+
+mess Checking [file]
+mess Number of entries: $HINFO(10,'ENTRIES')
+
+
+if $index([opt],'p').gt.0 then
+  opt logy
+  if $index( [opt], '/mc' ).gt.0 then
+    zone 2 3
+  else
+    zone 2 2
+  endif
+  tit [file]
+  nt/pl 10.rtdtc-tdtc
+  nt/pl 10.rtdt-tdt
+  nt/pl 10.rtdc-tdc
+  nt/pl 10.rtdmt-tdmt
+  if $index( [opt], '/mc' ).gt.0 then
+    nt/pl 10.rth-th
+    nt/pl 10.rtp-tp
+  endif
+endif
+
+return
