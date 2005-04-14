@@ -1,0 +1,170 @@
+macro calclumi ver=588
+
+| Get argument in batch mode:
+if batch.eq.1 then
+  read ver
+endif
+
+| Run/energy ranges:
+v/del *
+v/crea vrunl(6) i 7968 7592  6193 24214 23352 16803
+v/crea vrunh(6) i 8629 7962 12518 30397 24187 23351 
+v/crea vrsl(6) r 13.0 21.0 33.8 34.0 37.3 43.4 
+v/crea vrsh(6) r 15.0 23.0 36.0 36.0 39.3 46.6
+
+| Cross sections (PYTHIA)
+v/crea vxsec(6) r 2099.8 893.5 381.9 373.7 316.2 248.9
+sigma vxsecl= vxsec*10.0/11.0
+sigma vxsecb= vxsec/11.0
+
+| Vectors for event counting:
+v/crea vda(6) r 6*0.0
+v/crea vmc(6) r 6*0.0
+v/crea vmcs(6) r 6*0.0
+v/crea vmcb(6) r 6*0.0
+v/crea vmcl(6) r 6*0.0
+v/crea vmcsb(6) r 6*0.0
+v/crea vmcsl(6) r 6*0.0
+
+| nt/loop functions for event counting:
+application comis quit
+!file clclmi.f77
+quit
+
+| Set local dir:
+pwd= $shell('pwd')
+| lcd /remote/pcl246/skluth/jade/jobs
+lcd /mnt/scratch/skluth/jade/jobs
+
+| Data:
+close 0
+case [ver] in
+  (588)
+  h/file 20 jzread/tr7985.v588/jz_tr7985.v588.1-4.hbook
+  h/file 21 jzread/tr7985.v588/jz_tr7985.v588.5-8.hbook
+  h/file 22 jzread/tr7985.v588/jz_tr7985.v588.9-12.hbook
+  h/file 23 jzread/tr7985.v588/jz_tr7985.v588.13-17.hbook
+  h/file 24 jzread/tr86.v588/jz_tr86.v588.1-2.hbook
+  h/file 25 jzread/tr86.v588/jz_tr86.v588.3-4.hbook
+  h/file 26 jzread/tr86.v588/jz_tr86.v588.5-6.hbook
+  (987)
+  h/file 20 jzread/tr7985.v987/jz_tr7985.v987.1-7.hbook
+  h/file 21 jzread/tr7985.v987/jz_tr7985.v987.8-14.hbook
+  h/file 22 jzread/tr7985.v987/jz_tr7985.v987.15-21.hbook
+  h/file 23 jzread/tr7985.v987/jz_tr7985.v987.22-27.hbook
+  h/file 24 jzread/tr86.v987/jz_tr86.v987.1-3.hbook
+  h/file 25 jzread/tr86.v987/jz_tr86.v987.4-6.hbook
+  h/file 26 jzread/tr86.v987/jz_tr86.v987.7-10.hbook
+endcase
+units
+chain data //lun20 //lun21 //lun22 //lun23 //lun24 //lun25 //lun26
+chain data>
+cdir //data
+nt/loop 10 cntda 
+chain -
+
+| PYHTIA MC 14, 22, 35a, 35b, 38, 44:
+close 0
+h/file 30 jtuple/py57_14.0_81-07-17/jt_py57_14.0_81-07-17.1-5.hbook
+h/file 31 jtuple/py57_14.0_81-07-17/jt_py57_14.0_81-07-17.6-10.hbook
+units
+chain py14 //lun30 //lun31
+chain py14>
+cdir //py14
+nt/loop 10 cntmc(1)
+chain -
+
+close 0
+h/file 32 jtuple/py57_22.0_81-06-17/jt_py57_22.0_81-06-17.1-5.hbook
+h/file 33 jtuple/py57_22.0_81-06-17/jt_py57_22.0_81-06-17.6-10.hbook
+units
+chain py22 //lun32 //lun33
+chain py22>
+cdir //py22
+nt/loop 10 cntmc(2)
+chain -
+
+close 0
+h/file 34 jtuple/py57_34.6_82-05-17/jt_py57_34.6_82-05-17.1-5.hbook
+h/file 35 jtuple/py57_34.6_82-05-17/jt_py57_34.6_82-05-17.6-10.hbook
+h/file 36 jtuple/py57_34.6_82-05-17/jt_py57_34.6_82-05-17.11-15.hbook
+h/file 37 jtuple/py57_34.6_82-05-17/jt_py57_34.6_82-05-17.16-20.hbook
+units
+chain py35a //lun34 //lun35 //lun36 //lun37
+chain py35a>
+cdir //py35a
+nt/loop 10 cntmc(3)
+chain -
+
+close 0
+h/file 38 jtuple/py57_35.0_86-05-17/jt_py57_35.0_86-05-17.1-5.hbook
+h/file 39 jtuple/py57_35.0_86-05-17/jt_py57_35.0_86-05-17.6-10.hbook
+h/file 40 jtuple/py57_35.0_86-05-17/jt_py57_35.0_86-05-17.11-15.hbook
+h/file 41 jtuple/py57_35.0_86-05-17/jt_py57_35.0_86-05-17.16-20.hbook
+units
+chain py35b //lun38 //lun39 //lun40 //lun41
+chain py35b>
+cdir //py35b
+nt/loop 10 cntmc(4)
+chain -
+
+close 0
+h/file 42 jtuple/py57_38.3_85-10-01/jt_py57_38.3_85-10-01.1-5.hbook
+h/file 43 jtuple/py57_38.3_85-10-01/jt_py57_38.3_85-10-01.6-10.hbook
+units
+chain py38 //lun42 //lun43
+chain py38>
+cdir //py38
+nt/loop 10 cntmc(5)
+chain -
+
+close 0
+h/file 44 jtuple/py57_43.8_85-05-17/jt_py57_43.8_85-05-17.1-5.hbook
+h/file 45 jtuple/py57_43.8_85-05-17/jt_py57_43.8_85-05-17.6-10.hbook
+units
+chain py44 //lun44 //lun45
+chain py44>
+cdir //py44
+nt/loop 10 cntmc(6)
+chain -
+
+| Reset local dir:
+lcd [pwd]
+
+| Calculate lumis:
+sigma vlumi= vda/vxsec*vmc/vmcs
+
+| Calculate efficiencies:
+sigma veps= vmcs/vmc
+sigma vepsl= vmcsl/vmcl
+sigma vepsb= vmcsb/vmcb
+
+| Printout:
+mess Run/energy ranges:
+v/wri vrunl ! 6(1x,i7)
+v/wri vrunh ! 6(1x,i7)
+v/wri vrsl ! 6(1x,f7.1)
+v/wri vrsh ! 6(1x,f7.1)
+mess Selected events data:
+v/wri vda ! 6(1x,f7.0)
+mess Selected events MC all udsc b:
+v/wri vmcs ! 6(1x,f7.0)
+v/wri vmcsl ! 6(1x,f7.0)
+v/wri vmcsb ! 6(1x,f7.0)
+mess All events MC all udsc b:
+v/wri vmc ! 6(1x,f7.0)
+v/wri vmcl ! 6(1x,f7.0)
+v/wri vmcb ! 6(1x,f7.0)
+mess Cross sections all udsc b:
+v/wri vxsec ! 6(1x,f7.1)
+v/wri vxsecl ! 6(1x,f7.1)
+v/wri vxsecb ! 6(1x,f7.2)
+mess Lumis:
+v/wri vlumi ! 6(1x,f7.3)
+mess Efficiencies all udsc b:
+v/wri veps ! 6(1x,f7.3)
+v/wri vepsl ! 6(1x,f7.3)
+v/wri vepsb ! 6(1x,f7.3)
+
+| The End:
+return
